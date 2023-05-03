@@ -1,7 +1,7 @@
 import UIKit
 
 class LogInViewController: UIViewController {
-  
+  //comment
     private lazy var LogoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
