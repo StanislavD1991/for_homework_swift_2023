@@ -1,31 +1,26 @@
 import UIKit
 
-// Домашнее задание "UITableView, UIScrollView, datasource и delegate" часть 1
-// Уважаемый преподаватель, к сожалению у меня не получилось сделать задание на 100% - не могу понять, как связать UIScrollView с контентом
-// Подскажите пожалуйста, как нужно настроить, чтобы контент (который я отрисовал) отобразился в UIScrollView (для этого нужно мою верстку положить в UIView а его уже в UIScrollView?)
-//P.S. У меня был большой перерыв в обучении (полгода), не все смог вспомнить из пройденного - буду благодарен обратной связи
-
 class LogInViewController: UIViewController {
     
-    private lazy var MyScrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.backgroundColor = .systemBrown
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
         return scrollView
     }()
     
     private lazy var contentView: UIView = {
         let contentView = UIView()
-        
         contentView.translatesAutoresizingMaskIntoConstraints = false
         contentView.backgroundColor = .systemBlue
         
         return contentView
     }()
     
-    private lazy var LogoImageView: UIImageView = {
+    private lazy var logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.image = UIImage(named: "logo.jpeg")
@@ -34,7 +29,7 @@ class LogInViewController: UIViewController {
         return imageView
     }()
     
-    private lazy var MyStackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.distribution = .fillEqually
         stackView.spacing = 10
@@ -50,34 +45,32 @@ class LogInViewController: UIViewController {
     }()
     
     private lazy var inputBlockForLogin: UITextField = {
-        let input = UITextField()
-        input.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: input.frame.height))
-        input.leftViewMode = .always
-        input.textColor = .black
-        input.font = UIFont.systemFont(ofSize: 16.0)
-        input.font = UIFont.boldSystemFont(ofSize: 10)
-        input.placeholder = "Email of phone"
-        input.autocapitalizationType = .none
-        input.translatesAutoresizingMaskIntoConstraints = false
+        let textField = UITextField()
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
+        textField.leftViewMode = .always
+        textField.textColor = .black
+        textField.font = UIFont.systemFont(ofSize: 16.0)
+        textField.font = UIFont.boldSystemFont(ofSize: 10)
+        textField.placeholder = "Email of phone"
+        textField.autocapitalizationType = .none
+        textField.translatesAutoresizingMaskIntoConstraints = false
         
-        return input
+        return textField
     }()
     
     private lazy var inputBlockForPassword: UITextField = {
-        let input = UITextField()
-        input.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: input.frame.height))
-        input.leftViewMode = .always
-        input.textColor = .black
-        input.font = UIFont.systemFont(ofSize: 16.0)
-        input.font = UIFont.boldSystemFont(ofSize: 10)
-        input.placeholder = "Password"
-        input.autocapitalizationType = .none
-        input.isSecureTextEntry = true
-        input.layer.borderColor = UIColor.lightGray.cgColor
-        input.layer.borderWidth = 0.5
-        input.translatesAutoresizingMaskIntoConstraints = false
+        let textField = UITextField()
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
+        textField.leftViewMode = .always
+        textField.textColor = .black
+        textField.font = UIFont.systemFont(ofSize: 16.0)
+        textField.font = UIFont.boldSystemFont(ofSize: 10)
+        textField.placeholder = "Password"
+        textField.autocapitalizationType = .none
+        textField.isSecureTextEntry = true
+        textField.translatesAutoresizingMaskIntoConstraints = false
         
-        return input
+        return textField
     }()
     
     private lazy var editButton: UIButton = {
@@ -91,119 +84,64 @@ class LogInViewController: UIViewController {
         
         return button
     }()
-   
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    //private lazy var lineView: UIView = {
+    //    let lineView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 1))
+    //    lineView.backgroundColor = UIColor.black
+    //
+    //    return lineView
+    //}()
+    
+    private func setupView() {
         self.view.backgroundColor = .white
-        
-        self.view.addSubview(self.LogoImageView)
+        self.view.addSubview(self.logoImageView)
         self.view.addSubview(self.inputBlockForLogin)
         self.view.addSubview(self.inputBlockForPassword)
         self.view.addSubview(self.editButton)
-        self.view.addSubview(self.MyStackView)
-        
-        self.view.addSubview(self.MyScrollView)
+        self.view.addSubview(self.stackView)
+        self.view.addSubview(self.scrollView)
         self.view.addSubview(self.contentView)
+        //self.view.addSubview(self.lineView)
         
-        let logoImageHeaderView = LogoImageHeaderView()
-        let inputBlockForLoginHeaderView = InputBlockForLoginHeaderView()
-        let inputBlockForPasswordHeaderView = InputBlockForPasswordHeaderView()
-        let editButtonView = editButtonView()
-        let myStackView = myStackView()
-        //let myScrollView = myScrollView()
-        //let myContentView = myContentView()
-        
-        self.MyStackView.center = self.view.center
-        self.MyStackView.addArrangedSubview(self.inputBlockForLogin)
-        self.MyStackView.addArrangedSubview(self.inputBlockForPassword)
-        
-        //contentView.addSubview(MyStackView)
-        //self.MyScrollView.addSubview(self.contentView)
+        self.stackView.center = self.view.center
+        self.stackView.addArrangedSubview(self.inputBlockForLogin)
+        //self.stackView.addArrangedSubview(lineView)
+        self.stackView.addArrangedSubview(self.inputBlockForPassword)
+                
+        NSLayoutConstraint.activate([
+            self.logoImageView.topAnchor.constraint(equalTo: super.view.topAnchor, constant: 120),
+            self.logoImageView.widthAnchor.constraint(equalToConstant: 100),
+            self.logoImageView.heightAnchor.constraint(equalTo: self.logoImageView.widthAnchor),
+            self.logoImageView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor),
+            
+            self.logoImageView.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 20),
+            self.logoImageView.heightAnchor.constraint(equalToConstant: 100),
+            self.logoImageView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor),
+            
+            self.inputBlockForLogin.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 120),
+            self.inputBlockForLogin.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16),
+            self.inputBlockForLogin.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16),
+            self.inputBlockForLogin.heightAnchor.constraint(equalToConstant: 50),
+            
+            //self.lineView.topAnchor.constraint(equalTo: self.inputBlockForLogin.bottomAnchor, constant: 0),
+            //self.lineView.heightAnchor.constraint(equalToConstant: 1),
+            
+            self.inputBlockForPassword.topAnchor.constraint(equalTo: self.inputBlockForLogin.bottomAnchor, constant: 0),
+            self.inputBlockForPassword.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16),
+            self.inputBlockForPassword.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16),
+            self.inputBlockForPassword.heightAnchor.constraint(equalToConstant: 50),
+            
+            self.editButton.topAnchor.constraint(equalTo: self.inputBlockForPassword.bottomAnchor, constant: 16),
+            self.editButton.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16),
+            self.editButton.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16),
+            self.editButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
 
-        
-        //активация констрейна
-        NSLayoutConstraint.activate(logoImageHeaderView)
-        NSLayoutConstraint.activate(myStackView)
-        NSLayoutConstraint.activate(inputBlockForLoginHeaderView)
-        NSLayoutConstraint.activate(inputBlockForPasswordHeaderView)
-        NSLayoutConstraint.activate(editButtonView)
-        //NSLayoutConstraint.activate(myScrollView)
-    }
-    /*
-    private func myContentView() -> [NSLayoutConstraint]{
-        let topContraint = self.LogoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 10)
-        let heightAnchor = self.LogoImageView.heightAnchor.constraint(equalToConstant: 100)
-        let centerXAnchor = self.LogoImageView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor)
-        
-        return [
-            topContraint, heightAnchor, centerXAnchor
-        ]
-    }
-    
-    private func myScrollView() -> [NSLayoutConstraint]{
-        let topContraint = self.LogoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 10)
-        let heightAnchor = self.LogoImageView.heightAnchor.constraint(equalToConstant: 100)
-        let centerXAnchor = self.LogoImageView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor)
-        
-        return [
-            topContraint, heightAnchor, centerXAnchor
-        ]
-    }
-    */
-    private func LogoImageHeaderView() -> [NSLayoutConstraint]{
-        let topContraint = self.LogoImageView.topAnchor.constraint(equalTo: super.view.topAnchor, constant: 120)
-        let widthAnchor = self.LogoImageView.widthAnchor.constraint(equalToConstant: 100)
-        let heightAnchor = self.LogoImageView.heightAnchor.constraint(equalTo: self.LogoImageView.widthAnchor)
-        let centerXAnchor = self.LogoImageView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor)
-        
-        return [
-            topContraint, heightAnchor, widthAnchor, centerXAnchor
-        ]
-    }
-   
-    private func myStackView() -> [NSLayoutConstraint]{
-        let topContraint = self.LogoImageView.topAnchor.constraint(equalTo: self.LogoImageView.bottomAnchor, constant: 20)
-        let heightAnchor = self.LogoImageView.heightAnchor.constraint(equalToConstant: 100)
-        let centerXAnchor = self.LogoImageView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor)
-        
-        return [
-            topContraint, heightAnchor, centerXAnchor
-        ]
-    }
-    
-    private func InputBlockForLoginHeaderView() -> [NSLayoutConstraint]{
-        let topContraint = self.inputBlockForLogin.topAnchor.constraint(equalTo: self.LogoImageView.bottomAnchor, constant: 120)
-        let leadingAnchor = self.inputBlockForLogin.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16)
-        let trailingAnchor = self.inputBlockForLogin.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16)
-        let heightAnchor = self.inputBlockForLogin.heightAnchor.constraint(equalToConstant: 50)
-        
-        return [
-            topContraint, leadingAnchor, trailingAnchor, heightAnchor
-        ]
-    }
-    
-    private func InputBlockForPasswordHeaderView() -> [NSLayoutConstraint]{
-        let topContraint = self.inputBlockForPassword.topAnchor.constraint(equalTo: self.inputBlockForLogin.bottomAnchor, constant: 0)
-        let leadingAnchor = self.inputBlockForPassword.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16)
-        let trailingAnchor = self.inputBlockForPassword.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16)
-        let heightAnchor = self.inputBlockForPassword.heightAnchor.constraint(equalToConstant: 50)
-        
-        return [
-            topContraint, leadingAnchor, trailingAnchor, heightAnchor
-        ]
-    }
-    
-    private func editButtonView() -> [NSLayoutConstraint]{
-        let topContraint = self.editButton.topAnchor.constraint(equalTo: self.inputBlockForPassword.bottomAnchor, constant: 16)
-        let leadingAnchor = self.editButton.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16)
-        let trailingAnchor = self.editButton.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16)
-        let heightAnchor = self.editButton.heightAnchor.constraint(equalToConstant: 50)
-        
-        return [
-            topContraint, leadingAnchor, trailingAnchor, heightAnchor
-        ]
-    }
-    
     @objc private func didTapButton(){
         let vc = PostViewController()
         self.navigationController?.pushViewController(vc, animated: true)
@@ -211,11 +149,10 @@ class LogInViewController: UIViewController {
     
     @objc func willShowKeyboard(_ notification: NSNotification) {
         let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
-        MyScrollView.contentInset.bottom += keyboardHeight ?? 0.0
+        scrollView.contentInset.bottom += keyboardHeight ?? 0.0
     }
     
     @objc func willHideKeyboard(_ notification: NSNotification) {
-        MyScrollView.contentInset.bottom = 0.0
+        scrollView.contentInset.bottom = 0.0
     }
 }
-
