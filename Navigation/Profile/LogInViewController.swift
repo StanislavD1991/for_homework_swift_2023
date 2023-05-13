@@ -30,18 +30,18 @@ class LogInViewController: UIViewController {
     }()
     
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.distribution = .fillEqually
-        stackView.spacing = 10
-        stackView.axis = .vertical
-        stackView.backgroundColor = .systemBlue
-        stackView.layer.cornerRadius = 10
-        stackView.backgroundColor = .systemGray6
-        stackView.layer.borderColor = UIColor.lightGray.cgColor
-        stackView.layer.borderWidth = 0.5
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        let stack = UIStackView()
+        //stack.distribution = .fillEqually
+        stack.spacing = 10
+        stack.axis = .vertical
+        stack.layer.cornerRadius = 10
+        stack.backgroundColor = .systemGray6
+        stack.layer.borderColor = UIColor.lightGray.cgColor
+        stack.layer.borderWidth = 0.5
+        stack.distribution = .equalCentering
+        stack.translatesAutoresizingMaskIntoConstraints = false
         
-        return stackView
+        return stack
     }()
     
     private lazy var inputBlockForLogin: UITextField = {
@@ -85,27 +85,27 @@ class LogInViewController: UIViewController {
         return button
     }()
     
-    //private lazy var lineView: UIView = {
-    //    let lineView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 1))
-    //    lineView.backgroundColor = UIColor.black
-    //
-    //    return lineView
-    //}()
+    private lazy var lineView: UIView = {
+        let viewLine = UIView()
+        viewLine.backgroundColor = .lightGray
+        viewLine.translatesAutoresizingMaskIntoConstraints = false
+        
+        return viewLine
+    }()
     
     private func setupView() {
         self.view.backgroundColor = .white
         self.view.addSubview(self.logoImageView)
-        self.view.addSubview(self.inputBlockForLogin)
-        self.view.addSubview(self.inputBlockForPassword)
-        self.view.addSubview(self.editButton)
+        //self.view.addSubview(self.inputBlockForLogin)
+        //self.view.addSubview(self.lineView)
+        //self.view.addSubview(self.inputBlockForPassword)
         self.view.addSubview(self.stackView)
+        self.view.addSubview(self.editButton)
         self.view.addSubview(self.scrollView)
         self.view.addSubview(self.contentView)
-        //self.view.addSubview(self.lineView)
         
-        self.stackView.center = self.view.center
         self.stackView.addArrangedSubview(self.inputBlockForLogin)
-        //self.stackView.addArrangedSubview(lineView)
+        self.stackView.addArrangedSubview(self.lineView)
         self.stackView.addArrangedSubview(self.inputBlockForPassword)
                 
         NSLayoutConstraint.activate([
@@ -114,24 +114,24 @@ class LogInViewController: UIViewController {
             self.logoImageView.heightAnchor.constraint(equalTo: self.logoImageView.widthAnchor),
             self.logoImageView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor),
             
-            self.logoImageView.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 20),
-            self.logoImageView.heightAnchor.constraint(equalToConstant: 100),
-            self.logoImageView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor),
+            self.stackView.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 120),
+            self.stackView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor),
             
-            self.inputBlockForLogin.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 120),
+            //self.inputBlockForLogin.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 120),
             self.inputBlockForLogin.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16),
             self.inputBlockForLogin.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16),
             self.inputBlockForLogin.heightAnchor.constraint(equalToConstant: 50),
             
             //self.lineView.topAnchor.constraint(equalTo: self.inputBlockForLogin.bottomAnchor, constant: 0),
-            //self.lineView.heightAnchor.constraint(equalToConstant: 1),
+            self.lineView.heightAnchor.constraint(equalToConstant: 0.5),
+            //self.lineView.widthAnchor.constraint(equalToConstant: 0.5),
             
-            self.inputBlockForPassword.topAnchor.constraint(equalTo: self.inputBlockForLogin.bottomAnchor, constant: 0),
+            //self.inputBlockForPassword.topAnchor.constraint(equalTo: self.inputBlockForLogin.bottomAnchor, constant: 0),
             self.inputBlockForPassword.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16),
             self.inputBlockForPassword.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16),
             self.inputBlockForPassword.heightAnchor.constraint(equalToConstant: 50),
             
-            self.editButton.topAnchor.constraint(equalTo: self.inputBlockForPassword.bottomAnchor, constant: 16),
+            self.editButton.topAnchor.constraint(equalTo: self.stackView.bottomAnchor, constant: 16),
             self.editButton.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16),
             self.editButton.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16),
             self.editButton.heightAnchor.constraint(equalToConstant: 50)
@@ -143,7 +143,7 @@ class LogInViewController: UIViewController {
     }
 
     @objc private func didTapButton(){
-        let vc = PostViewController()
+        let vc = ProfileViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
