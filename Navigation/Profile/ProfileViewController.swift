@@ -41,8 +41,8 @@ class ProfileViewController: UIViewController {
             
             self.newButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
             self.newButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
-            self.newButton.topAnchor.constraint(equalTo: self.profileHeaderView.bottomAnchor, constant: 40),
-            self.newButton.heightAnchor.constraint(equalToConstant: 50)
+            self.newButton.heightAnchor.constraint(equalToConstant: 50),
+            self.newButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
         
         // Скрыть кнопку "Back" на Navigation Bar
