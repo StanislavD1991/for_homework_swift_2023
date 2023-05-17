@@ -2,20 +2,24 @@ import UIKit
 
 class LogInViewController: UIViewController {
     
+    //let scrollView = UIScrollView()
+    
+    
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = true
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.backgroundColor = .systemBrown
+        scrollView.showsHorizontalScrollIndicator = true
+        scrollView.backgroundColor = .systemYellow
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
         return scrollView
     }()
     
+    
     private lazy var contentView: UIView = {
         let contentView = UIView()
+        scrollView.backgroundColor = .white
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.backgroundColor = .systemBlue
         
         return contentView
     }()
@@ -95,31 +99,47 @@ class LogInViewController: UIViewController {
     
     private func setupView() {
         self.view.backgroundColor = .white
-        self.view.addSubview(self.logoImageView)
-        //self.view.addSubview(self.inputBlockForLogin)
-        //self.view.addSubview(self.lineView)
-        //self.view.addSubview(self.inputBlockForPassword)
-        self.view.addSubview(self.stackView)
-        self.view.addSubview(self.editButton)
-        self.view.addSubview(self.scrollView)
-        self.view.addSubview(self.contentView)
+
+        //self.view.addSubview(self.logoImageView)
+        //self.view.addSubview(self.stackView)
+        //self.view.addSubview(self.editButton)
+        
+        //self.view.addSubview(self.stackView)
         
         self.stackView.addArrangedSubview(self.inputBlockForLogin)
         self.stackView.addArrangedSubview(self.lineView)
         self.stackView.addArrangedSubview(self.inputBlockForPassword)
+        
+        self.contentView.addSubview(self.logoImageView)
+        self.contentView.addSubview(self.stackView)
+        self.contentView.addSubview(self.editButton)
+        
+        //self.scrollView.addSubview(self.contentView)        
+
+        self.view.addSubview(self.scrollView)
+        self.view.addSubview(self.contentView)
+        
+        //self.view.addSubview(self.scrollView)
+        //self.view.addSubview(self.contentView)
+        //self.view.addSubview(self.logoImageView)
+        //self.view.addSubview(self.inputBlockForLogin)
+        //self.view.addSubview(self.lineView)
+        //self.view.addSubview(self.inputBlockForPassword)
+        //self.view.addSubview(self.stackView)
+        //self.view.addSubview(self.editButton)
                 
         NSLayoutConstraint.activate([
-            self.logoImageView.topAnchor.constraint(equalTo: super.view.topAnchor, constant: 120),
+            self.logoImageView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 120),
             self.logoImageView.widthAnchor.constraint(equalToConstant: 100),
             self.logoImageView.heightAnchor.constraint(equalTo: self.logoImageView.widthAnchor),
-            self.logoImageView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor),
+            self.logoImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             
             self.stackView.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 120),
-            self.stackView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor),
+            self.stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             
             //self.inputBlockForLogin.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 120),
-            self.inputBlockForLogin.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16),
-            self.inputBlockForLogin.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16),
+            self.inputBlockForLogin.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
+            self.inputBlockForLogin.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
             self.inputBlockForLogin.heightAnchor.constraint(equalToConstant: 50),
             
             //self.lineView.topAnchor.constraint(equalTo: self.inputBlockForLogin.bottomAnchor, constant: 0),
@@ -127,14 +147,30 @@ class LogInViewController: UIViewController {
             //self.lineView.widthAnchor.constraint(equalToConstant: 0.5),
             
             //self.inputBlockForPassword.topAnchor.constraint(equalTo: self.inputBlockForLogin.bottomAnchor, constant: 0),
-            self.inputBlockForPassword.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16),
-            self.inputBlockForPassword.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16),
+            self.inputBlockForPassword.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
+            self.inputBlockForPassword.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
             self.inputBlockForPassword.heightAnchor.constraint(equalToConstant: 50),
             
             self.editButton.topAnchor.constraint(equalTo: self.stackView.bottomAnchor, constant: 16),
-            self.editButton.leadingAnchor.constraint(equalTo: super.view.leadingAnchor, constant: 16),
-            self.editButton.trailingAnchor.constraint(equalTo: super.view.trailingAnchor, constant: -16),
-            self.editButton.heightAnchor.constraint(equalToConstant: 50)
+            self.editButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
+            self.editButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
+            self.editButton.heightAnchor.constraint(equalToConstant: 50),
+            
+          
+            // Устанавливаем констрейнты для UIScrollView
+            self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.scrollView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
+            
+            // Устанавливаем констрейнты для UIView в UIScrollView
+            self.contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            self.contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            self.contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            self.contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            self.contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+
         ])
     }
     override func viewDidLoad() {
