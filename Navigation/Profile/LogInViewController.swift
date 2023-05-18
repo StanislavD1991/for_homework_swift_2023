@@ -114,7 +114,7 @@ class LogInViewController: UIViewController {
         self.contentView.addSubview(self.stackView)
         self.contentView.addSubview(self.editButton)
         
-        //self.scrollView.addSubview(self.contentView)        
+        self.scrollView.addSubview(self.contentView)
 
         self.view.addSubview(self.scrollView)
         self.view.addSubview(self.contentView)
