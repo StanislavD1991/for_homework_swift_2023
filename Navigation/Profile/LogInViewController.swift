@@ -6,7 +6,7 @@ class LogInViewController: UIViewController {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = true
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.backgroundColor = .systemYellow
+        scrollView.backgroundColor = .white
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
         return scrollView
@@ -96,18 +96,17 @@ class LogInViewController: UIViewController {
     
     private func setupView() {
         self.view.backgroundColor = .white
-
-        self.stackView.addArrangedSubview(self.inputBlockForLogin)
-        self.stackView.addArrangedSubview(self.lineView)
-        self.stackView.addArrangedSubview(self.inputBlockForPassword)
+        self.view.addSubview(self.scrollView)
+        
+        self.scrollView.addSubview(self.contentView)
         
         self.contentView.addSubview(self.logoImageView)
         self.contentView.addSubview(self.stackView)
         self.contentView.addSubview(self.editButton)
         
-        self.scrollView.addSubview(self.contentView)
-
-        self.view.addSubview(self.scrollView)
+        self.stackView.addArrangedSubview(self.inputBlockForLogin)
+        self.stackView.addArrangedSubview(self.lineView)
+        self.stackView.addArrangedSubview(self.inputBlockForPassword)
     
         let safeAreaGuide = self.view.safeAreaLayoutGuide
         
@@ -120,12 +119,15 @@ class LogInViewController: UIViewController {
             self.stackView.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 120),
             self.stackView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
             
+            self.inputBlockForLogin.topAnchor.constraint(equalTo: self.stackView.topAnchor),
             self.inputBlockForLogin.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
             self.inputBlockForLogin.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
             self.inputBlockForLogin.heightAnchor.constraint(equalToConstant: 50),
             
+            self.lineView.topAnchor.constraint(equalTo: self.inputBlockForLogin.bottomAnchor),
             self.lineView.heightAnchor.constraint(equalToConstant: 0.5),
             
+            self.inputBlockForPassword.topAnchor.constraint(equalTo: self.lineView.bottomAnchor),
             self.inputBlockForPassword.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
             self.inputBlockForPassword.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
             self.inputBlockForPassword.heightAnchor.constraint(equalToConstant: 50),
@@ -134,6 +136,7 @@ class LogInViewController: UIViewController {
             self.editButton.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
             self.editButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
             self.editButton.heightAnchor.constraint(equalToConstant: 50),
+            self.editButton.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor),
           
             self.scrollView.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor),
             self.scrollView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor),
@@ -146,8 +149,19 @@ class LogInViewController: UIViewController {
             self.contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             self.contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             self.contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            self.contentView.heightAnchor.constraint(equalToConstant: 700),
         ])
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupKeyboardObservers()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        removeKeyboardObservers()
     }
     
     private func setupKeyboardObservers() {
@@ -185,7 +199,8 @@ class LogInViewController: UIViewController {
     
     @objc func willShowKeyboard(_ notification: NSNotification) {
         let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
-        scrollView.contentInset.bottom += keyboardHeight ?? 0.0
+        print("scrollView.contentInset.bottom: \(scrollView.contentInset.bottom)")
+        scrollView.contentInset.bottom = keyboardHeight ?? 0.0
     }
     
     @objc func willHideKeyboard(_ notification: NSNotification) {
