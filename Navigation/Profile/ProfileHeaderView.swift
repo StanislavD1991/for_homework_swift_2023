@@ -1,11 +1,12 @@
 //import Foundation
+
 import UIKit
 
 protocol ProfileViewDelegate: AnyObject {
     func openImagePickerController()
 }
 
-class ProfileHeaderView: UIView{
+class ProfileHeaderView: UIView {
     private var statusText: String?
     //Аватарка
     private lazy var avatarImageView: UIImageView = {
@@ -15,9 +16,7 @@ class ProfileHeaderView: UIView{
         imageView.image = UIImage(named: "ava.jpeg")
         imageView.layer.borderWidth = 3
         imageView.layer.borderColor = UIColor.white.cgColor
-        
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        
         return imageView
     }()
     
@@ -29,11 +28,10 @@ class ProfileHeaderView: UIView{
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
     
-    private lazy var statusLable: UILabel = {
+    private lazy var statusLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.text = "Ожидаем статус..."
         label.font = UIFont(name: label.font.fontName, size: 14)
@@ -83,6 +81,14 @@ class ProfileHeaderView: UIView{
         return myButton
     }()
     
+    private lazy var tableView: UITableView = {
+        let myTableView = UITableView()
+        myTableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        
+        return myTableView
+    }()
+    
     /*
     private lazy var newButton: UIButton = {
         let button = UIButton(frame: .zero)
@@ -109,7 +115,7 @@ class ProfileHeaderView: UIView{
         self.backgroundColor = .systemBackground
         self.addSubview(self.avatarImageView)
         self.addSubview(self.titleLable)
-        self.addSubview(self.statusLable)
+        self.addSubview(self.statusLabel)
         self.addSubview(self.inputBlock)
         self.addSubview(self.editButton)
         
@@ -124,10 +130,10 @@ class ProfileHeaderView: UIView{
             self.titleLable.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
             self.titleLable.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
             
-            self.statusLable.topAnchor.constraint(equalTo: self.titleLable.bottomAnchor, constant: 25),
-            self.statusLable.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
+            self.statusLabel.topAnchor.constraint(equalTo: self.titleLable.bottomAnchor, constant: 25),
+            self.statusLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
 
-            self.inputBlock.topAnchor.constraint(equalTo: self.statusLable.bottomAnchor, constant: 16),
+            self.inputBlock.topAnchor.constraint(equalTo: self.statusLabel.bottomAnchor, constant: 16),
             self.inputBlock.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
             self.inputBlock.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             self.inputBlock.heightAnchor.constraint(equalToConstant: 50),
@@ -151,7 +157,7 @@ class ProfileHeaderView: UIView{
     
     @objc private func showStatus() {
         let statusText = self.statusText ?? ""
-        self.statusLable.text = statusText.isEmpty ? "Ожидаем статус..." : statusText
+        self.statusLabel.text = statusText.isEmpty ? "Ожидаем статус..." : statusText
     }
     
     @objc private func statusTextChanged(_ textField: UITextField){

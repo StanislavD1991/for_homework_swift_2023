@@ -2,7 +2,7 @@ import UIKit
 
 class FeedViewController: UIViewController {
 
-    var post = Post(title: "Мой пост для передачи")
+    //var post = Post(title: "Мой пост для передачи")
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(frame: CGRect(x: 57, y: 410, width: 217.5, height: 77.5))
@@ -37,7 +37,7 @@ class FeedViewController: UIViewController {
     
     @objc private func didTapButton(){
         let vc = PostViewController()
-        vc.titlePost = post.title
+        //vc.titlePost = post.title
         self.navigationController?.pushViewController(vc, animated: true)        
     }
 }
