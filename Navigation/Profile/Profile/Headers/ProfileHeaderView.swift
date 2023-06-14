@@ -6,6 +6,8 @@ protocol ProfileViewDelegate: AnyObject {
     func openImagePickerController()
 }
 
+// MARK: - ProfileHeaderView
+
 class ProfileHeaderView: UIView {
     private var statusText: String?
     //Аватарка
@@ -26,7 +28,7 @@ class ProfileHeaderView: UIView {
         label.text = "Иван Солярка"
         label.font = UIFont(name: label.font.fontName, size: 18)
         label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .black
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -36,7 +38,7 @@ class ProfileHeaderView: UIView {
         label.text = "Ожидаем статус..."
         label.font = UIFont(name: label.font.fontName, size: 14)
         label.font = UIFont.boldSystemFont(ofSize: 10)
-        label.textColor = .darkGray
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -84,7 +86,6 @@ class ProfileHeaderView: UIView {
     private lazy var tableView: UITableView = {
         let myTableView = UITableView()
         myTableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
         
         return myTableView
     }()
@@ -120,6 +121,7 @@ class ProfileHeaderView: UIView {
         self.addSubview(self.editButton)
         
         //self.addSubview(self.newButton)
+        // MARK: - NSLayoutConstraint.activate
                 
         NSLayoutConstraint.activate([
             self.avatarImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
@@ -130,7 +132,7 @@ class ProfileHeaderView: UIView {
             self.titleLable.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
             self.titleLable.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
             
-            self.statusLabel.topAnchor.constraint(equalTo: self.titleLable.bottomAnchor, constant: 25),
+            self.statusLabel.topAnchor.constraint(equalTo: self.titleLable.bottomAnchor, constant: 16),
             self.statusLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
 
             self.inputBlock.topAnchor.constraint(equalTo: self.statusLabel.bottomAnchor, constant: 16),
@@ -138,11 +140,12 @@ class ProfileHeaderView: UIView {
             self.inputBlock.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             self.inputBlock.heightAnchor.constraint(equalToConstant: 50),
             
+            self.editButton.topAnchor.constraint(equalTo: self.inputBlock.bottomAnchor, constant: 16),
             self.editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             self.editButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            //self.editButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0),
-            self.editButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -5),
             self.editButton.heightAnchor.constraint(equalToConstant: 50),
+            self.editButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 202),
+            
 
             //self.newButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
             //self.newButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),

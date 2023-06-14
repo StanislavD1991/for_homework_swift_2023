@@ -1,7 +1,7 @@
 import UIKit
-
+// MARK: - LogInViewController
 class LogInViewController: UIViewController {
-    
+    // MARK: - private var
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = true
@@ -93,7 +93,7 @@ class LogInViewController: UIViewController {
         
         return viewLine
     }()
-    
+    // MARK: - private func
     private func setupView() {
         self.view.backgroundColor = .white
         self.view.addSubview(self.scrollView)
@@ -109,7 +109,7 @@ class LogInViewController: UIViewController {
         self.stackView.addArrangedSubview(self.inputBlockForPassword)
     
         let safeAreaGuide = self.view.safeAreaLayoutGuide
-        
+        // MARK: - NSLayoutConstraint.activate
         NSLayoutConstraint.activate([
             self.logoImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 120),
             self.logoImageView.widthAnchor.constraint(equalToConstant: 100),
@@ -152,18 +152,6 @@ class LogInViewController: UIViewController {
         ])
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        setupKeyboardObservers()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        removeKeyboardObservers()
-    }
-    
     private func setupKeyboardObservers() {
         let notificationCenter = NotificationCenter.default
         
@@ -185,6 +173,18 @@ class LogInViewController: UIViewController {
     private func removeKeyboardObservers() {
         let notificationCenter = NotificationCenter.default
         notificationCenter.removeObserver(self)
+    }
+    // MARK: - override
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupKeyboardObservers()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        removeKeyboardObservers()
     }
     
     override func viewDidLoad() {
