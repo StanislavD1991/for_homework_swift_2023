@@ -1,11 +1,14 @@
 //import Foundation
+
 import UIKit
 
 protocol ProfileViewDelegate: AnyObject {
     func openImagePickerController()
 }
 
-class ProfileHeaderView: UIView{
+// MARK: - ProfileHeaderView
+
+class ProfileHeaderView: UIView {
     private var statusText: String?
     //Аватарка
     private lazy var avatarImageView: UIImageView = {
@@ -15,9 +18,7 @@ class ProfileHeaderView: UIView{
         imageView.image = UIImage(named: "ava.jpeg")
         imageView.layer.borderWidth = 3
         imageView.layer.borderColor = UIColor.white.cgColor
-        
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        
         return imageView
     }()
     
@@ -27,18 +28,17 @@ class ProfileHeaderView: UIView{
         label.text = "Иван Солярка"
         label.font = UIFont(name: label.font.fontName, size: 18)
         label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .black
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
     
-    private lazy var statusLable: UILabel = {
+    private lazy var statusLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.text = "Ожидаем статус..."
         label.font = UIFont(name: label.font.fontName, size: 14)
         label.font = UIFont.boldSystemFont(ofSize: 10)
-        label.textColor = .darkGray
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -57,6 +57,7 @@ class ProfileHeaderView: UIView{
         input.font = UIFont.systemFont(ofSize: 15.0)
         input.font = UIFont.boldSystemFont(ofSize: 10)
         input.addTarget(self, action: #selector(self.statusTextChanged), for: .editingChanged)
+        input.placeholder = "Set your status, bro..."
         
         input.translatesAutoresizingMaskIntoConstraints = false
         
@@ -65,23 +66,31 @@ class ProfileHeaderView: UIView{
  
     //рисуем кнопку
     private lazy var editButton: UIButton = {
-        let button = UIButton(frame: .zero)
-        button.backgroundColor = .systemBlue
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 20
-        button.clipsToBounds = true
-        button.addTarget(self, action: #selector(self.showStatus), for: .touchUpInside)
-        button.setTitle("Показать статус", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 4.0, height: 4.0)
-        button.layer.shadowOpacity = 0.7
-        button.layer.shadowRadius = 4
-        button.translatesAutoresizingMaskIntoConstraints = false
+        let myButton = UIButton(frame: .zero)
+        myButton.backgroundColor = .systemBlue
+        myButton.setTitleColor(.white, for: .normal)
+        myButton.layer.cornerRadius = 20
+        myButton.layer.shadowColor = UIColor.black.cgColor
+        myButton.layer.shadowOffset = CGSize(width: 4.0, height: 4.0)
+        myButton.layer.shadowOpacity = 0.7
+        myButton.layer.shadowRadius = 4
+        //myButton.clipsToBounds = true
+        myButton.addTarget(self, action: #selector(self.showStatus), for: .touchUpInside)
+        myButton.setTitle("Показать статус", for: .normal)
+        myButton.setTitleColor(.white, for: .normal)        
+        myButton.translatesAutoresizingMaskIntoConstraints = false
         
-        return button
+        return myButton
     }()
     
+    private lazy var tableView: UITableView = {
+        let myTableView = UITableView()
+        myTableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        return myTableView
+    }()
+    
+    /*
     private lazy var newButton: UIButton = {
         let button = UIButton(frame: .zero)
         button.backgroundColor = .systemGreen
@@ -92,6 +101,7 @@ class ProfileHeaderView: UIView{
         
         return button
     }()
+    */
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -103,13 +113,15 @@ class ProfileHeaderView: UIView{
     }
     
     private func setupView() {
-        self.backgroundColor = .systemBackground
+        self.backgroundColor = .black
         self.addSubview(self.avatarImageView)
         self.addSubview(self.titleLable)
-        self.addSubview(self.statusLable)
-        self.addSubview(self.editButton)
+        self.addSubview(self.statusLabel)
         self.addSubview(self.inputBlock)
-        self.addSubview(self.newButton)
+        self.addSubview(self.editButton)
+        
+        //self.addSubview(self.newButton)
+        // MARK: - NSLayoutConstraint.activate
                 
         NSLayoutConstraint.activate([
             self.avatarImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
@@ -120,23 +132,25 @@ class ProfileHeaderView: UIView{
             self.titleLable.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
             self.titleLable.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
             
-            self.statusLable.topAnchor.constraint(equalTo: self.titleLable.bottomAnchor, constant: 25),
-            self.statusLable.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
+            self.statusLabel.topAnchor.constraint(equalTo: self.titleLable.bottomAnchor, constant: 16),
+            self.statusLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
 
-            self.editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            self.editButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.editButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0),
-            self.editButton.heightAnchor.constraint(equalToConstant: 50),
-
-            self.inputBlock.topAnchor.constraint(equalTo: self.statusLable.bottomAnchor, constant: 16),
+            self.inputBlock.topAnchor.constraint(equalTo: self.statusLabel.bottomAnchor, constant: 16),
             self.inputBlock.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
             self.inputBlock.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             self.inputBlock.heightAnchor.constraint(equalToConstant: 50),
+            
+            self.editButton.topAnchor.constraint(equalTo: self.inputBlock.bottomAnchor, constant: 16),
+            self.editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.editButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            self.editButton.heightAnchor.constraint(equalToConstant: 50),
+            self.editButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16),
+            
 
-            self.newButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
-            self.newButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
-            self.newButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 150),
-            self.newButton.heightAnchor.constraint(equalToConstant: 50)
+            //self.newButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
+            //self.newButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            //self.newButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 150),
+            //self.newButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -145,7 +159,8 @@ class ProfileHeaderView: UIView{
     }
     
     @objc private func showStatus() {
-        self.statusLable.text = self.statusText
+        let statusText = self.statusText ?? ""
+        self.statusLabel.text = statusText.isEmpty ? "Ожидаем статус..." : statusText
     }
     
     @objc private func statusTextChanged(_ textField: UITextField){

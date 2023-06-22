@@ -10,6 +10,7 @@ class PostViewController: UIViewController {
         let barButtonAdd = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(redColor))
     
         navigationItem.rightBarButtonItem = barButtonAdd
+
     }
     
     @objc private func didTapButton(){
