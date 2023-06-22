@@ -177,17 +177,16 @@ class LogInViewController: UIViewController {
     // MARK: - override
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         setupKeyboardObservers()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         removeKeyboardObservers()
     }
     
     override func viewDidLoad() {
+        navigationController?.setNavigationBarHidden(true, animated: true)
         super.viewDidLoad()
         setupView()
     }

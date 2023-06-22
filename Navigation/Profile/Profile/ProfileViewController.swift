@@ -12,8 +12,8 @@ class ProfileViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(ProfilePostCell.self, forCellReuseIdentifier: "ProfilePostCellID")
-        tableView.tableHeaderView = ProfileHeaderView()
-        tableView.sectionHeaderHeight = 250
+//        tableView.tableHeaderView = ProfileHeaderView()
+//        tableView.sectionHeaderHeight = 250
         return tableView
     }()
     
@@ -60,6 +60,15 @@ extension ProfileViewController: UITableViewDataSource {
         cell.setup(post: self.posts[indexPath.row])
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            let headerView = ProfileHeaderView()
+            return headerView
+        }
+        return nil
+    }
+
     
 }
 

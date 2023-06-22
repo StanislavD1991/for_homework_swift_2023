@@ -113,7 +113,7 @@ class ProfileHeaderView: UIView {
     }
     
     private func setupView() {
-        self.backgroundColor = .systemBackground
+        self.backgroundColor = .black
         self.addSubview(self.avatarImageView)
         self.addSubview(self.titleLable)
         self.addSubview(self.statusLabel)
@@ -144,7 +144,7 @@ class ProfileHeaderView: UIView {
             self.editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             self.editButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             self.editButton.heightAnchor.constraint(equalToConstant: 50),
-            self.editButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 202),
+            self.editButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16),
             
 
             //self.newButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
