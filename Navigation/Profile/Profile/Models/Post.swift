@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 
 // MARK: - Profile
+
 struct Profile {
     let name: String
     let surname: String
@@ -15,6 +16,7 @@ struct Profile {
 }
 
 // MARK: - Post
+
 struct Post {
     var author: String
     var description: String

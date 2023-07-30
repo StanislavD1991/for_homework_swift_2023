@@ -6,11 +6,40 @@ protocol ProfileViewDelegate: AnyObject {
     func openImagePickerController()
 }
 
-// MARK: - ProfileHeaderView
+// MARK: - Properties
 
 class ProfileHeaderView: UIView {
-    private var statusText: String?
-    //Аватарка
+
+    private var statusText: String?    
+    private var photoSource: [Photo] = PhotoSource.rundomPhotos(with: 20)
+    private var itemSizeCollection = (UIScreen.main.bounds.width - 32)/4
+    
+    // MARK: - properties
+    
+    private var posts: [Post] = arrayPosts
+    
+    private lazy var layout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 8
+        layout.minimumLineSpacing = 12
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        return layout
+    }()
+    
+    private lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.layout)
+        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: "PhotoCellID")
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "DefaultCellID")
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .black
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.clipsToBounds = true
+        return collectionView
+    }()
+
+    // Аватарка
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView(frame: .zero)
         imageView.layer.cornerRadius = 60
@@ -22,7 +51,7 @@ class ProfileHeaderView: UIView {
         return imageView
     }()
     
-    //Заголовок
+    // Заголовок
     private lazy var titleLable: UILabel = {
         let label = UILabel(frame: .zero)
         label.text = "Иван Солярка"
@@ -43,128 +72,135 @@ class ProfileHeaderView: UIView {
         
         return label
     }()
- 
-    private lazy var inputBlock: UITextField = {
-        let input = UITextField(frame: .zero)
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: self.frame.size.height))
-        input.leftView = paddingView
-        input.leftViewMode = .always
-        input.backgroundColor = .white
-        input.layer.cornerRadius = 12
-        input.layer.borderWidth = 1
-        input.layer.borderColor = UIColor.black.cgColor
-        input.textColor = .black
-        input.font = UIFont.systemFont(ofSize: 15.0)
-        input.font = UIFont.boldSystemFont(ofSize: 10)
-        input.addTarget(self, action: #selector(self.statusTextChanged), for: .editingChanged)
-        input.placeholder = "Set your status, bro..."
-        
-        input.translatesAutoresizingMaskIntoConstraints = false
-        
-        return input
+
+    // поля ввода для статуса
+    private lazy var statusTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Set your status, bro..."
+        textField.backgroundColor = .white
+        textField.layer.cornerRadius = 12
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.black.cgColor
+        textField.textColor = .black
+        textField.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        textField.leftView =  UIView(frame: CGRect(x: 0, y: 0, width: 10, height: self.frame.size.height))
+        textField .leftViewMode = .always
+        textField .translatesAutoresizingMaskIntoConstraints = false
+        // add target
+        textField .addTarget(self, action: #selector(self.statusTextChanged), for: .editingChanged)
+        return textField
     }()
- 
-    //рисуем кнопку
-    private lazy var editButton: UIButton = {
-        let myButton = UIButton(frame: .zero)
-        myButton.backgroundColor = .systemBlue
-        myButton.setTitleColor(.white, for: .normal)
-        myButton.layer.cornerRadius = 20
-        myButton.layer.shadowColor = UIColor.black.cgColor
-        myButton.layer.shadowOffset = CGSize(width: 4.0, height: 4.0)
-        myButton.layer.shadowOpacity = 0.7
-        myButton.layer.shadowRadius = 4
-        //myButton.clipsToBounds = true
-        myButton.addTarget(self, action: #selector(self.showStatus), for: .touchUpInside)
-        myButton.setTitle("Показать статус", for: .normal)
-        myButton.setTitleColor(.white, for: .normal)        
-        myButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        return myButton
-    }()
-    
-    private lazy var tableView: UITableView = {
-        let myTableView = UITableView()
-        myTableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        return myTableView
-    }()
-    
-    /*
-    private lazy var newButton: UIButton = {
-        let button = UIButton(frame: .zero)
-        button.backgroundColor = .systemGreen
-        button.setTitle("кнопка", for: .normal)
+
+    // Кнопка изменения статуса
+    private lazy var statusButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Показать статус", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 20
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 4.0, height: 4.0)
+        button.layer.shadowOpacity = 0.7
+        button.layer.shadowRadius = 4
         button.translatesAutoresizingMaskIntoConstraints = false
-        
+        // add target
+        button.addTarget(self, action: #selector(self.showStatus), for: .touchUpInside)
         return button
     }()
-    */
-    
+
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupView()
+        addView()
+        addConstraints()
     }
- 
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private func setupView() {
-        self.backgroundColor = .black
-        self.addSubview(self.avatarImageView)
-        self.addSubview(self.titleLable)
-        self.addSubview(self.statusLabel)
-        self.addSubview(self.inputBlock)
-        self.addSubview(self.editButton)
-        
-        //self.addSubview(self.newButton)
-        // MARK: - NSLayoutConstraint.activate
-                
+
+    // MARK: - Functions
+
+    private func addView() {
+        addSubview(avatarImageView)
+        addSubview(titleLable)
+        addSubview(statusLabel)
+        addSubview(statusTextField)
+        addSubview(statusButton)
+        addSubview(collectionView)
+    }
+
+    func setup(with profile: Profile) {
+        avatarImageView.image = profile.image ?? UIImage(systemName: "person.circle")
+    }
+
+    @objc private func showStatus() {
+        let statusText = statusText ?? ""
+        statusLabel.text = statusText.isEmpty ? "Ожидаем статус..." : statusText
+    }
+
+    @objc private func statusTextChanged(_ textField: UITextField) {
+        statusText = self.statusTextField.text ?? ""
+    }
+
+    // MARK: - Constraints
+
+    private func addConstraints() {
+
         NSLayoutConstraint.activate([
-            self.avatarImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
-            self.avatarImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            self.avatarImageView.widthAnchor.constraint(equalToConstant: 120),
-            self.avatarImageView.heightAnchor.constraint(equalTo: self.avatarImageView.widthAnchor),
+            avatarImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
+            avatarImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 120),
+            avatarImageView.heightAnchor.constraint(equalTo: self.avatarImageView.widthAnchor),
             
-            self.titleLable.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
-            self.titleLable.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
+            titleLable.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
+            titleLable.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
             
-            self.statusLabel.topAnchor.constraint(equalTo: self.titleLable.bottomAnchor, constant: 16),
-            self.statusLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
+            statusLabel.topAnchor.constraint(equalTo: self.titleLable.bottomAnchor, constant: 16),
+            statusLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
 
-            self.inputBlock.topAnchor.constraint(equalTo: self.statusLabel.bottomAnchor, constant: 16),
-            self.inputBlock.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
-            self.inputBlock.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.inputBlock.heightAnchor.constraint(equalToConstant: 50),
+            statusTextField.topAnchor.constraint(equalTo: self.statusLabel.bottomAnchor, constant: 16),
+            statusTextField.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 16),
+            statusTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            statusTextField.heightAnchor.constraint(equalToConstant: 50),
             
-            self.editButton.topAnchor.constraint(equalTo: self.inputBlock.bottomAnchor, constant: 16),
-            self.editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            self.editButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.editButton.heightAnchor.constraint(equalToConstant: 50),
-            self.editButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16),
+            statusButton.topAnchor.constraint(equalTo: self.statusTextField.bottomAnchor, constant: 16),
+            statusButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            statusButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            statusButton.heightAnchor.constraint(equalToConstant: 50),
+            //statusButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16),
             
-
-            //self.newButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
-            //self.newButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
-            //self.newButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 150),
-            //self.newButton.heightAnchor.constraint(equalToConstant: 50)
+            collectionView.topAnchor.constraint(equalTo: statusButton.bottomAnchor, constant: 50),
+            collectionView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor),
+            collectionView.heightAnchor.constraint(equalToConstant: itemSizeCollection),
+            collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16),
         ])
     }
-    
-    func setup(with profile: Profile){
-        self.avatarImageView.image = profile.image ?? UIImage(systemName: "person.circle")
+}
+
+extension ProfileHeaderView: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        photoSource.count
     }
     
-    @objc private func showStatus() {
-        let statusText = self.statusText ?? ""
-        self.statusLabel.text = statusText.isEmpty ? "Ожидаем статус..." : statusText
-    }
-    
-    @objc private func statusTextChanged(_ textField: UITextField){
-        self.statusText = self.inputBlock.text ?? ""
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCellID", for: indexPath) as? PhotoCell else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCellID", for: indexPath)
+            return cell
+        }
+        cell.imageView.image = UIImage(named: photoSource[indexPath.item].imageName)
+        cell.layer.cornerRadius = 8
+        cell.isUserInteractionEnabled = true
+        
+        return cell
+    }    
+}
+
+extension ProfileHeaderView: UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: itemSizeCollection, height: itemSizeCollection)
     }
 }
- 

@@ -9,12 +9,13 @@ import UIKit
 
 final class ProfilePostCell: UITableViewCell {
     
-    // MARK: - Private properties
+    // TODO: - структурировать аналогично с ProfileViewController или с ProfileHeaderView
     
     private lazy var postImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleToFill
+        imageView.backgroundColor = .yellow
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
@@ -50,7 +51,7 @@ final class ProfilePostCell: UITableViewCell {
         return label
     }()
     
-    // MARK: - Lifecycles
+    // MARK: - Init
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -62,7 +63,7 @@ final class ProfilePostCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Public methods
+    // TODO: -  по аналогии
     
     func setup(post: Post) {
         self.postImageView.image = UIImage(named: post.image)
@@ -70,40 +71,43 @@ final class ProfilePostCell: UITableViewCell {
         self.postLabelDescription.text = "\(post.description)\n"
         self.postLabelLikes.text = "Likes: \(post.likes)"
         self.postLabelViews.text = "View: \(post.views)"
-    }    
+    }
     
-    // MARK: - Private methods
+    // MARK: - по аналогии
     
     private func setupView() {
         self.backgroundColor = .black
-        self.contentView.addSubview(self.postImageView)
-        self.contentView.addSubview(self.postLabelAuthor)
-        self.contentView.addSubview(self.postLabelDescription)
-        self.contentView.addSubview(self.postLabelLikes)
-        self.contentView.addSubview(self.postLabelViews)
+        contentView.addSubview(self.postImageView)
+        contentView.addSubview(self.postLabelAuthor)
+        contentView.addSubview(self.postLabelDescription)
+        contentView.addSubview(self.postLabelLikes)
+        contentView.addSubview(self.postLabelViews)
     }
-    
+
+    // MARK: - по аналогии
+
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            self.postImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.postImageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor),
-            self.postImageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+            postImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 30),
+            postImageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 35),
+            postImageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -35),
+            postImageView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
 
-            self.postLabelAuthor.topAnchor.constraint(equalTo: self.postImageView.bottomAnchor),
-            self.postLabelAuthor.leftAnchor.constraint(equalTo: self.contentView.leftAnchor),
-            self.postLabelAuthor.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+            postLabelAuthor.topAnchor.constraint(equalTo: self.postImageView.bottomAnchor, constant: 10),
+            postLabelAuthor.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 5),
+            postLabelAuthor.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -5),
 
-            self.postLabelDescription.topAnchor.constraint(equalTo: self.postLabelAuthor.bottomAnchor),
-            self.postLabelDescription.leftAnchor.constraint(equalTo: self.contentView.leftAnchor),
-            self.postLabelDescription.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+            postLabelDescription.topAnchor.constraint(equalTo: self.postLabelAuthor.bottomAnchor),
+            postLabelDescription.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 5),
+            postLabelDescription.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -5),
 
-            self.postLabelLikes.topAnchor.constraint(equalTo: self.postLabelDescription.bottomAnchor),
-            self.postLabelLikes.leftAnchor.constraint(equalTo: self.contentView.leftAnchor),
-            self.postLabelLikes.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            postLabelLikes.topAnchor.constraint(equalTo: self.postLabelDescription.bottomAnchor, constant: 10),
+            postLabelLikes.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 5),
+            postLabelLikes.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             
-            self.postLabelViews.topAnchor.constraint(equalTo: self.postLabelDescription.bottomAnchor),
-            self.postLabelViews.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
-            self.postLabelViews.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            postLabelViews.topAnchor.constraint(equalTo: self.postLabelDescription.bottomAnchor, constant: 10),
+            postLabelViews.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -5),
+            postLabelViews.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
         ])
     }
     
