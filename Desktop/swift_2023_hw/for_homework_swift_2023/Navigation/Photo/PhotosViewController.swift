@@ -1,6 +1,6 @@
 //
 //  PhotosViewController.swift
-//  Navigator
+//  Navigation
 //
 //  Created by Stanislav on 18.08.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.swift
-//  Navigator
+//  Navigation
 //
 //  Created by Stanislav on 16.08.2023.
 //
