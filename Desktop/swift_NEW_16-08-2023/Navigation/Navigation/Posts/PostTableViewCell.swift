@@ -111,7 +111,7 @@ class PostTableViewCell: UITableViewCell {
         let imgProcessor = ImageProcessor()
         let image = UIImage(named: post.image) ?? UIImage()
         
-        imgProcessor.processImage(sourceImage: image, filter: .crystallize(radius: 5.0)) { image in
+        imgProcessor.processImage(sourceImage: image, filter: .crystallize(radius: 6.0)) { image in
             postImage.image = image
         }
         
